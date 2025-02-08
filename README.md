@@ -1,6 +1,6 @@
 # Pokémon TCG Tracker
 
-backend:
+backend: https://github.com/sgcook97/pokemon-tracker-backend
 
 ## Info
 
