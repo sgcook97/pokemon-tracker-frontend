@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useApi } from "./axiosConfig";
 
 const AuthContext = createContext();
@@ -14,6 +14,8 @@ export function AuthProvider({ children }) {
                 password: credentials.password
             })
 
+            // console.log(res.data.user);
+            
             if (res.status === 200) {
                 setUser(res.data.user);
                 return true;
@@ -32,6 +34,19 @@ export function AuthProvider({ children }) {
             console.error("Logout failed:", error.message);
         }
     }
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const res = await api.get("/auth/user");
+                setUser(res.data.user);
+            } catch (err) {
+                console.error("User session expired or not logged in.");
+                setUser(null);
+            }
+        };
+        fetchUser();
+    }, []);
 
     return (
         <AuthContext.Provider value={{ user, login, logout }}>

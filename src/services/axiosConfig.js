@@ -1,7 +1,9 @@
 import { useMemo } from "react";
 import axios from "axios";
 
+
 export function useApi() {
+
     const api = useMemo(() => {
         const instance = axios.create({
             baseURL: import.meta.env.VITE_API_URL,

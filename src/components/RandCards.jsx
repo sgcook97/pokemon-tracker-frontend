@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useApi } from "../services/axiosConfig";
+import { useNavigate } from "react-router";
 
 
 function RandCards() {
     const api = useApi();
+    const navigate = useNavigate();
     const [cards, setCards] = useState([])
 
     useEffect(() => {
@@ -12,7 +14,12 @@ function RandCards() {
                 const response = await api.get('/cards');
                 setCards(response.data.cards);
             } catch (error) {
-                console.error("Error fetching cards data:", error);
+                if (error.response && error.response.status == 401) {
+                    console.error("Token expired. Redirecting to Login...");
+                    navigate("/");
+                } else {
+                    console.error("Error fetching cards data:", error);
+                }
             }
         };
 

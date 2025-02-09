@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useApi } from "../services/axiosConfig";
+import {useNavigate} from "react-router";
 
 function FeaturedSets() {
+    const navigate = useNavigate();
     const api = useApi();
     const [sets, setSets] = useState([]);
 
@@ -11,7 +13,12 @@ function FeaturedSets() {
                 const response = await api.get("/sets");
                 setSets(response.data.sets);
             } catch (error) {
-                console.error("Error fetching featured sets:", error);
+                if (error.response && error.response.status == 401) {
+                    console.error("Token expired. Redirecting to Login...");
+                    navigate("/");
+                } else {
+                    console.error("Error fetching sets data:", error);
+                }
             }
         }
 
